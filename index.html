@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KindredMatch | Smart Volunteer Platform</title>
+  <!-- Google Fonts & Lucide Icons CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Top Glassmorphism Navigation Bar -->
+<header class="navbar">
+  <div class="nav-container">
+    <div class="brand">
+      <span class="brand-icon"><i data-lucide="sparkles"></i></span>
+      <span class="brand-title">Kindred<strong>Match</strong></span>
+    </div>
+
+    <!-- Dedicated Individual vs Organization Toggle -->
+    <div class="role-switch-container">
+      <button type="button" id="toggle-individual-btn" class="role-toggle-btn active" onclick="switchMainPortal('individual')">
+        Individual / Volunteer
+      </button>
+      <button type="button" id="toggle-org-btn" class="role-toggle-btn" onclick="switchMainPortal('organization')">
+        Organization
+      </button>
+    </div>
+
+    <!-- Auth Controls & Theme Switcher -->
+    <div class="nav-actions">
+      <button id="theme-toggle" class="icon-btn" aria-label="Toggle Theme" onclick="toggleTheme()">
+        <i id="theme-icon" data-lucide="sun"></i>
+      </button>
+      <div id="auth-buttons-container">
+        <button class="secondary-btn btn-sm" onclick="openAuthModal('volunteer', 'login')">Volunteer Login</button>
+        <button class="primary-btn btn-sm" onclick="openAuthModal('volunteer', 'signup')">Join as Volunteer</button>
+      </div>
+      <div id="user-profile-badge" class="user-avatar hidden" onclick="handleLogout()" title="Click to log out">
+        <img id="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Profile" />
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Application Body -->
+  <main class="main-wrapper">
+    <!-- 1. PUBLIC HOMEPAGE (No Login Required) -->
+    <section id="public-home-view" class="home-view">
+      <div class="guest-hero">
+        <span class="badge-pill">Smart Matching Platform</span>
+        <h1 class="guest-title">Connect With Meaningful Impact Near You</h1>
+        <p class="guest-subtitle">Explore open volunteer opportunities across education, sustainability, tech mentorship, and community aid without creating an account.</p>
+        <div class="guest-cta-group">
+          <button class="primary-btn" onclick="navigateTo('volunteer')">
+            <i data-lucide="compass"></i> Browse Opportunities
+          </button>
+          <button class="secondary-btn" onclick="navigateTo('org-portal')">
+            <i data-lucide="building-2"></i> Post as Organization
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Stats & About Grid -->
+      <div class="guest-stats-row">
+        <div class="stat-box">
+          <h3>14,200+</h3>
+          <p>Hours Contributed</p>
+        </div>
+        <div class="stat-box">
+          <h3>320+</h3>
+          <p>Partner Non-Profits</p>
+        </div>
+        <div class="stat-box">
+          <h3>94%</h3>
+          <p>Average Skill Match</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. DEDICATED ORGANIZATION AUTH / PORTAL LANDING -->
+    <section id="org-auth-view" class="org-landing hidden">
+      <div class="org-auth-card">
+        <div class="org-auth-tabs">
+          <button id="org-tab-login" class="tab-btn active" onclick="switchOrgTab('login')">Organization Login</button>
+          <button id="org-tab-signup" class="tab-btn" onclick="switchOrgTab('signup')">Register Non-Profit</button>
+        </div>
+        
+        <!-- Organization Login Form -->
+        <form id="org-login-form" onsubmit="handleOrgAuth(event, 'login')">
+          <h2>Access Partner Dashboard</h2>
+          <p class="text-secondary text-sm mb-4">Manage candidate pipelines, post openings, and issue hours.</p>
+          <div class="form-group">
+            <label>Work / Organization Email</label>
+            <input type="email" required placeholder="director@nonprofit.org" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" required placeholder="••••••••" />
+          </div>
+          <button type="submit" class="primary-btn w-full">Sign In to Portal</button>
+        </form>
+
+        <!-- Organization Signup Form -->
+        <form id="org-signup-form" class="hidden" onsubmit="handleOrgAuth(event, 'signup')">
+          <h2>Register Non-Profit / NGO</h2>
+          <p class="text-secondary text-sm mb-4">Recruit verified student talent tailored to your mission.</p>
+          <div class="form-group">
+            <label>Organization Name</label>
+            <input type="text" required placeholder="e.g., Austin Literacy Coalition" />
+          </div>
+          <div class="form-group">
+            <label>EIN / Registration ID</label>
+            <input type="text" required placeholder="XX-XXXXXXX" />
+          </div>
+          <div class="form-group">
+            <label>Official Email</label>
+            <input type="email" required placeholder="contact@coalition.org" />
+          </div>
+          <div class="form-group">
+            <label>Create Password</label>
+            <input type="password" required placeholder="Minimum 8 characters" />
+          </div>
+          <button type="submit" class="primary-btn w-full">Submit Organization Application</button>
+        </form>
+      </div>
+    </section>
+    <!-- Hero / Status Banner -->
+    <section class="hero-strip">
+      <div class="hero-text">
+        <h1 id="view-title">Smart Recommendations</h1>
+        <p id="view-subtitle">Found 6 opportunities tailored to your Web Dev and Tutoring profile skills.</p>
+      </div>
+      <div class="hero-metrics" id="hero-stats">
+        <div class="metric-card">
+          <span class="metric-val">34 hrs</span>
+          <span class="metric-lbl">Impact Earned</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-val">94%</span>
+          <span class="metric-lbl">Avg Match</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter & Search Toolbar (Volunteer Mode) -->
+    <div id="volunteer-tools" class="toolbar">
+      <div class="search-box">
+        <i data-lucide="search"></i>
+        <input type="text" id="search-input" placeholder="Search by skills, causes or tags..." oninput="filterCards()" />
+      </div>
+      <div class="filter-chips">
+        <button class="chip active" onclick="filterCategory('All', this)">All</button>
+        <button class="chip" onclick="filterCategory('Education', this)">Education</button>
+        <button class="chip" onclick="filterCategory('Environment', this)">Environment</button>
+        <button class="chip" onclick="filterCategory('Technology', this)">Tech</button>
+      </div>
+    </div>
+
+    <!-- Opportunity Cards Grid (Volunteer Mode) -->
+    <section id="volunteer-grid" class="cards-grid"></section>
+
+    <!-- Organization Pipeline View (Hidden by default) -->
+    <!-- DEDICATED ORGANIZATION WEBPAGE -->
+    <section id="dedicated-org-page" class="org-full-page hidden">
+      <!-- Org Page Banner / Header -->
+      <div class="org-hero-banner">
+        <div class="org-hero-content">
+          <span class="badge-pill">Organization Management Portal</span>
+          <h1>Empower Your Mission with Verified Volunteers</h1>
+          <p>Post open positions, track applicants via matching metrics, and confirm completed impact hours.</p>
+        </div>
+        <button type="button" class="primary-btn org-cta-btn" onclick="openCreateModal()">
+          <i data-lucide="plus-circle"></i> Create New Opportunity
+        </button>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="org-stats-grid">
+        <div class="org-stat-card">
+          <span class="stat-number">18</span>
+          <span class="stat-label">Active Openings</span>
+        </div>
+        <div class="org-stat-card">
+          <span class="stat-number">142</span>
+          <span class="stat-label">Total Applicants</span>
+        </div>
+        <div class="org-stat-card">
+          <span class="stat-number">1,240 hrs</span>
+          <span class="stat-label">Hours Verified</span>
+        </div>
+      </div>
+
+      <!-- Applicant Screening & Verification Table -->
+      <div class="table-card">
+        <div class="table-header-flex">
+          <h3>Volunteer Applications</h3>
+          <span class="text-secondary text-sm">Review match scores and confirm service hours</span>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Volunteer Name</th>
+                <th>Applied Role</th>
+                <th>Match Score</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="applicant-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Mobile Bottom App Bar -->
+  <nav class="mobile-nav">
+    <button class="mob-item active" onclick="switchRole('student')">
+      <i data-lucide="compass"></i>
+      <span>Explore</span>
+    </button>
+    <button class="mob-item" onclick="alert('Navigating to applications status')">
+      <i data-lucide="clipboard-list"></i>
+      <span>Status</span>
+    </button>
+    <button class="mob-item" onclick="switchRole('org')">
+      <i data-lucide="briefcase"></i>
+      <span>Organize</span>
+    </button>
+    <button class="mob-item" onclick="alert('Opening profile modal')">
+      <i data-lucide="user"></i>
+      <span>Profile</span>
+    </button>
+  </nav>
+
+  <!-- Create Opportunity Modal (with Image Picker Preset) -->
+  <div id="create-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Create New Volunteering Opportunity</h3>
+        <button class="close-btn" onclick="closeCreateModal()"><i data-lucide="x"></i></button>
+      </div>
+      <form id="opportunity-form" onsubmit="handleCreateOpportunity(event)">
+        <div class="form-group">
+          <label>Opportunity Title</label>
+          <input type="text" id="opp-title" required placeholder="e.g. STEM Coding Mentor for High Schoolers" />
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <select id="opp-category">
+            <option value="Technology">Technology</option>
+            <option value="Education">Education</option>
+            <option value="Environment">Environment</option>
+            <option value="Community Support">Community Support</option>
+          </select>
+        </div>
+
+        <!-- Custom Image Picker Dropdown -->
+        <div class="form-group">
+          <label>Banner Preset Image</label>
+          <div class="image-picker-dropdown">
+            <div id="image-picker-trigger" class="image-trigger" onclick="toggleImageDropdown()">
+              <div class="selected-meta">
+                <img id="picker-preview" src="" alt="Selected preset" />
+                <div>
+                  <h4 id="picker-label">Loading...</h4>
+                  <span id="picker-cat" class="text-secondary text-xs"></span>
+                </div>
+              </div>
+              <i data-lucide="chevron-down" id="picker-chevron"></i>
+            </div>
+            <div id="image-dropdown-menu" class="image-menu hidden"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Location / Remote</label>
+          <input type="text" id="opp-location" required placeholder="e.g. Austin Public Library or Remote" />
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="secondary-btn" onclick="closeCreateModal()">Cancel</button>
+          <button type="submit" class="primary-btn">Publish Opportunity</button>
+        </div>
+      </form>
+    </div>
+  </div>
+<!-- Universal Volunteer Login & Signup Modal -->
+  <div id="auth-modal" class="modal-backdrop hidden">
+    <div class="modal-card auth-modal-card">
+      <div class="modal-header">
+        <div class="auth-segmented-switch">
+          <button type="button" id="auth-tab-login" class="tab-btn active" onclick="setAuthMode('login')">Sign In</button>
+          <button type="button" id="auth-tab-signup" class="tab-btn" onclick="setAuthMode('signup')">Create Account</button>
+        </div>
+        <button type="button" class="close-btn" onclick="closeAuthModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <!-- Volunteer Login Form -->
+      <form id="volunteer-login-form" onsubmit="handleVolunteerAuth(event, 'login')">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" required placeholder="student@university.edu" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" required placeholder="••••••••" />
+        </div>
+        <button type="submit" class="primary-btn w-full">Log In</button>
+      </form>
+
+      <!-- Volunteer Sign Up Form -->
+      <form id="volunteer-signup-form" class="hidden" onsubmit="handleVolunteerAuth(event, 'signup')">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" required placeholder="Alex Morgan" />
+        </div>
+        <div class="form-group">
+          <label>University / College</label>
+          <input type="text" required placeholder="e.g., University" />
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" required placeholder="alex@university.edu" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" required placeholder="Create password" />
+        </div>
+        <button type="submit" class="primary-btn w-full">Join as Student Volunteer</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast" class="toast hidden">Application submitted successfully!</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
