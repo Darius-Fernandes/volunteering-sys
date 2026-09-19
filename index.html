@@ -69,13 +69,13 @@
       <div class="guest-hero">
         <span class="badge-pill">Smart Matching Platform</span>
         <h1 class="guest-title">Connect With Meaningful Impact Near You</h1>
-        <p class="guest-subtitle">Explore open volunteer opportunities across education, sustainability, tech mentorship, and community aid without creating an account.</p>
+        <p class="guest-subtitle">Explore open volunteer opportunities across education, sustainability, tech mentorship, and community aid</p>
         <div class="guest-cta-group">
           <button type="button" class="primary-btn" onclick="scrollToCategories()">
           <i data-lucide="compass"></i> Browse Opportunities
           </button>
-          <button class="secondary-btn" onclick="navigateTo('org-portal')">
-            <i data-lucide="building-2"></i> Post as Organization
+          <button type="button" class="secondary-btn" onclick="goToOrgPortal()">
+          <i data-lucide="building"></i> Post as Organization
           </button>
         </div>
       </div>
@@ -99,11 +99,12 @@
     </section>
 
     <!-- 2. DEDICATED ORGANIZATION AUTH / PORTAL LANDING -->
+    <!-- DEDICATED ORGANIZATION AUTH / PORTAL LANDING -->
     <section id="org-auth-view" class="org-landing hidden">
       <div class="org-auth-card">
         <div class="org-auth-tabs">
-          <button id="org-tab-login" class="tab-btn active" onclick="switchOrgTab('login')">Organization Login</button>
-          <button id="org-tab-signup" class="tab-btn" onclick="switchOrgTab('signup')">Register Non-Profit</button>
+          <button type="button" id="org-tab-login" class="tab-btn active" onclick="switchOrgTab('login')">Organization Login</button>
+          <button type="button" id="org-tab-signup" class="tab-btn" onclick="switchOrgTab('signup')">Register Non-Profit</button>
         </div>
         
         <!-- Organization Login Form -->
@@ -112,11 +113,11 @@
           <p class="text-secondary text-sm mb-4">Manage candidate pipelines, post openings, and issue hours.</p>
           <div class="form-group">
             <label>Work / Organization Email</label>
-            <input type="email" required placeholder="director@nonprofit.org" />
+            <input type="email" id="org-login-email" required placeholder="director@nonprofit.org" />
           </div>
           <div class="form-group">
             <label>Password</label>
-            <input type="password" required placeholder="••••••••" />
+            <input type="password" id="org-login-password" required placeholder="••••••••" />
           </div>
           <button type="submit" class="primary-btn w-full">Sign In to Portal</button>
         </form>
@@ -127,21 +128,21 @@
           <p class="text-secondary text-sm mb-4">Recruit verified student talent tailored to your mission.</p>
           <div class="form-group">
             <label>Organization Name</label>
-            <input type="text" required placeholder="e.g., Austin Literacy Coalition" />
+            <input type="text" id="org-signup-name" required placeholder="e.g. SayTrees Environmental Trust" />
           </div>
           <div class="form-group">
-            <label>EIN / Registration ID</label>
-            <input type="text" required placeholder="XX-XXXXXXX" />
+            <label>Registration / Darpan / EIN ID</label>
+            <input type="text" id="org-signup-id" required placeholder="e.g. KA/2024/012345" />
           </div>
           <div class="form-group">
             <label>Official Email</label>
-            <input type="email" required placeholder="contact@coalition.org" />
+            <input type="email" id="org-signup-email" required placeholder="contact@nonprofit.org" />
           </div>
           <div class="form-group">
             <label>Create Password</label>
-            <input type="password" required placeholder="Minimum 8 characters" />
+            <input type="password" id="org-signup-password" required placeholder="Minimum 6 characters" minlength="6" />
           </div>
-          <button type="submit" class="primary-btn w-full">Submit Organization Application</button>
+          <button type="submit" class="primary-btn w-full">Register & Access Dashboard</button>
         </form>
       </div>
     </section>
@@ -149,7 +150,7 @@
     <section class="hero-strip">
       <div class="hero-text">
         <h1 id="view-title">Smart Recommendations</h1>
-        <p id="view-subtitle">Found 6 opportunities tailored to your Web Dev and Tutoring profile skills.</p>
+        <p id="view-subtitle">Found 11 opportunities tailored to your interests</p>
       </div>
       <div class="hero-metrics" id="hero-stats">
         <div class="metric-card">
@@ -198,41 +199,72 @@
       </div>
 
       <!-- Quick Metrics Grid -->
+      <!-- Dedicated Organization Dashboard -->
+      <!-- Org Stats Strip: Initialized to 0 -->
       <div class="org-stats-grid">
         <div class="org-stat-card">
-          <span class="stat-number">18</span>
-          <span class="stat-label">Active Openings</span>
+          <h3 id="org-metric-openings">0</h3>
+          <p>Active Openings</p>
         </div>
         <div class="org-stat-card">
-          <span class="stat-number">142</span>
-          <span class="stat-label">Total Applicants</span>
+          <h3 id="org-metric-applicants">0</h3>
+          <p>Total Applicants</p>
         </div>
         <div class="org-stat-card">
-          <span class="stat-number">1,240 hrs</span>
-          <span class="stat-label">Hours Verified</span>
+          <h3 id="org-metric-hours">0 hrs</h3>
+          <p>Hours Verified</p>
         </div>
       </div>
 
-      <!-- Applicant Screening & Verification Table -->
-      <div class="table-card">
-        <div class="table-header-flex">
-          <h3>Volunteer Applications</h3>
-          <span class="text-secondary text-sm">Review match scores and confirm service hours</span>
+      <!-- NEW: Manage Active Created Opportunities Table -->
+      <div class="table-container" style="margin-bottom: 2rem;">
+        <div class="table-header">
+          <div>
+            <h3>Active Organization Openings</h3>
+            <p class="text-secondary text-sm">Review, track status, or remove opportunities whose deadline has passed.</p>
+          </div>
+          <button type="button" class="primary-btn btn-sm" onclick="openCreateModal()">
+            <i data-lucide="plus"></i> New Opening
+          </button>
         </div>
-        <div class="table-responsive">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Volunteer Name</th>
-                <th>Applied Role</th>
-                <th>Match Score</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="applicant-rows"></tbody>
-          </table>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>OPPORTUNITY TITLE</th>
+              <th>CATEGORY</th>
+              <th>DEADLINE</th>
+              <th>STATUS</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="org-opportunities-rows">
+            <!-- Dynamically populated or empty state -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Volunteer Applications Table -->
+      <div class="table-container">
+        <div class="table-header">
+          <div>
+            <h3>Volunteer Applications</h3>
+            <p class="text-secondary text-sm">Review match scores and confirm service hours</p>
+          </div>
         </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>VOLUNTEER NAME</th>
+              <th>APPLIED ROLE</th>
+              <th>MATCH SCORE</th>
+              <th>STATUS</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="applicant-rows">
+            <!-- Dynamically populated or empty state -->
+          </tbody>
+        </table>
       </div>
     </section>
     <!-- DEDICATED NGO SECTOR / CATEGORY WEBPAGE -->
@@ -275,78 +307,122 @@
   </nav>
 
   <!-- Create Opportunity Modal (with Image Picker Preset) -->
-  <div id="create-modal" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Create New Volunteering Opportunity</h3>
-        <button class="close-btn" onclick="closeCreateModal()"><i data-lucide="x"></i></button>
-      </div>
-      <form id="opportunity-form" onsubmit="handleCreateOpportunity(event)">
-        <div class="form-group">
-          <label>Opportunity Title</label>
-          <input type="text" id="opp-title" required placeholder="e.g. STEM Coding Mentor for High Schoolers" />
-        </div>
-
-        <div class="form-group">
-          <label>Category</label>
-          <select id="opp-category">
-            <option value="Technology">Technology</option>
-            <option value="Education">Education</option>
-            <option value="Environment">Environment</option>
-            <option value="Community Support">Community Support</option>
-          </select>
-        </div>
-
-        <!-- Custom Image Picker Dropdown -->
-        <!-- Image Choice: Preset or Custom Upload -->
-        <div class="form-group">
-          <label>Banner Photo Source</label>
-          <div class="photo-tab-switch">
-            <button type="button" id="img-tab-preset" class="tab-btn active" onclick="switchImageInputMode('preset')">Library Presets</button>
-            <button type="button" id="img-tab-custom" class="tab-btn" onclick="switchImageInputMode('custom')">Upload / Custom URL</button>
-          </div>
-        </div>
-
-        <!-- Preset Selector Section -->
-        <div id="preset-picker-section" class="form-group">
-          <label>Choose Preset</label>
-          <div class="image-picker-dropdown">
-            <div id="image-picker-trigger" class="image-trigger" onclick="toggleImageDropdown()">
-              <div class="selected-meta">
-                <img id="picker-preview" src="" alt="Selected preset" />
-                <div>
-                  <h4 id="picker-label">Loading...</h4>
-                  <span id="picker-cat" class="text-secondary text-xs"></span>
-                </div>
-              </div>
-              <i data-lucide="chevron-down" id="picker-chevron"></i>
-            </div>
-            <div id="image-dropdown-menu" class="image-menu hidden"></div>
-          </div>
-        </div>
-
-        <!-- Custom Upload Section -->
-        <div id="custom-picker-section" class="form-group hidden">
-          <label>Upload Work Image (or Paste Direct URL)</label>
-          <input type="file" id="custom-image-file" accept="image/*" onchange="handleCustomFileUpload(event)" class="file-input-field mb-2" />
-          <input type="url" id="custom-image-url" placeholder="https://example.com/work-photo.jpg" oninput="handleCustomUrlInput(event)" />
-          <div id="custom-preview-box" class="custom-preview hidden">
-            <img id="custom-preview-img" src="" alt="Uploaded Photo Preview" />
-            <span class="text-xs text-secondary">Preview of your promotional photo</span>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Location / Remote</label>
-          <input type="text" id="opp-location" required placeholder="e.g. Austin Public Library or Remote" />
-        </div>
-
-        <div class="modal-actions">
-          <button type="button" class="secondary-btn" onclick="closeCreateModal()">Cancel</button>
-          <button type="submit" class="primary-btn">Publish Opportunity</button>
-        </div>
-      </form>
+  <!-- CREATE OPPORTUNITY MODAL -->
+<div id="create-modal" class="modal-backdrop hidden">
+  <div class="modal-card modal-compact">
+    <!-- Header with Back Button and Title -->
+    <div class="modal-header-strip">
+      <button type="button" class="btn-back-modal" onclick="closeCreateModal()">
+        ← Back
+      </button>
+      <h3>Post New Opportunity</h3>
+      <button type="button" class="btn-close-modal" onclick="closeCreateModal()">
+        &times;
+      </button>
     </div>
+
+    <!-- Scrollable Form Body -->
+    <form onsubmit="handleCreateOpportunity(event)" class="modal-form-scrollable">
+      <div class="form-group">
+        <label>Opportunity Title / Role</label>
+        <input type="text" id="opp-title" required placeholder="e.g. Lead Math & Science Tutor" />
+      </div>
+
+      <div class="form-group">
+        <label>Category Hub</label>
+        <select id="opp-category" required class="w-full">
+          <option value="teaching-centers">Teaching Centers (Education)</option>
+          <option value="medical-centers">Medical Centers (Healthcare)</option>
+          <option value="environmental-centers">Environmental Centers (Environment)</option>
+          <option value="community-welfare">Community Welfare Centres</option>
+          <option value="animal-welfare">Animal Welfare Centres</option>
+          <option value="disaster-relief">Disaster Relief</option>
+          <option value="elderly-care">Elderly Care Centres</option>
+          <option value="women-child">Women and Child Centres</option>
+          <option value="rural-development">Rural Development Centres</option>
+          <option value="disability-support">Disability Support Centres</option>
+          <option value="fundraisers">Fundraisers Centres</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Organization Official Email</label>
+        <input type="email" id="opp-contact-email" required placeholder="volunteer@ngo.org" />
+      </div>
+
+      <!-- Set phone input pattern and length -->
+      <div class="form-group">
+       <label>Organization Contact Phone</label>
+       <input 
+        type="tel" 
+        id="opp-contact-phone" 
+        required 
+        placeholder="10-digit mobile number" 
+        pattern="[0-9]{10}" 
+        maxlength="14" 
+        />
+      </div>
+
+<!-- Lock deadline picker to today or later -->
+
+
+      <div class="form-group">
+        <label>Center / Workplace Location</label>
+        <input type="text" id="opp-location" required placeholder="e.g. Koramangala, Bengaluru" />
+      </div>
+
+      <div class="form-group">
+        <label>Application Deadline</label>
+      <input 
+        type="date" 
+        id="opp-deadline" 
+        required 
+      />
+      </div>
+
+      <!-- Banner Image Controls -->
+      <div class="form-group">
+        <label>Banner Photo Source</label>
+        <div class="image-toggle-bar">
+          <button type="button" id="img-tab-preset" class="tab-btn active" onclick="switchImageInputMode('preset')">Library Presets</button>
+          <button type="button" id="img-tab-custom" class="tab-btn" onclick="switchImageInputMode('custom')">Upload / Custom URL</button>
+        </div>
+      </div>
+
+      <!-- Preset Picker Section -->
+      <div id="preset-picker-section" class="form-group">
+        <label>Choose Preset</label>
+        <div class="preset-dropdown-container">
+          <div class="preset-trigger" onclick="toggleImageDropdown()">
+            <img id="picker-preview" src="https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Thumbnail" />
+            <div style="flex:1; text-align:left;">
+              <span id="picker-label" style="display:block; font-weight:600; font-size:0.85rem;">Youth Tutoring & Mentorship</span>
+              <span id="picker-cat" style="font-size:0.75rem; color:var(--text-secondary);">Education</span>
+            </div>
+            <span style="font-size:0.8rem; color:var(--text-secondary);">▼</span>
+          </div>
+          <div id="image-dropdown-menu" class="image-dropdown hidden"></div>
+        </div>
+      </div>
+
+      <!-- Custom Upload Section -->
+      <div id="custom-picker-section" class="form-group hidden">
+        <label>Upload Image File or Enter URL</label>
+        <input type="file" accept="image/*" onchange="handleCustomFileUpload(event)" style="margin-bottom:0.5rem;" />
+        <input type="url" placeholder="Paste direct image link (https://...)" onchange="handleCustomUrlInput(event)" />
+        <div id="custom-preview-box" class="preview-box hidden" style="margin-top:0.5rem;">
+          <img id="custom-preview-img" src="" alt="Custom preview" style="max-height:120px; border-radius:8px; object-fit:cover; width:100%;" />
+        </div>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="modal-footer-strip">
+        <button type="button" class="secondary-btn" onclick="closeCreateModal()">Cancel</button>
+        <button type="submit" class="primary-btn">Publish Opportunity</button>
+      </div>
+    </form>
   </div>
+</div>
   <!-- User / Volunteer Dashboard Modal -->
   <div id="student-dashboard-modal" class="modal-backdrop hidden">
     <div class="modal-card dashboard-card">
@@ -431,17 +507,28 @@
       </div>
 
       <!-- Volunteer Login Form -->
-      <form id="volunteer-login-form" onsubmit="handleVolunteerAuth(event, 'login')">
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" required placeholder="student@university.edu" />
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" required placeholder="••••••••" />
-        </div>
-        <button type="submit" class="primary-btn w-full">Log In</button>
-      </form>
+      <!-- Volunteer / Student Login Form -->
+<form id="volunteer-login-form" onsubmit="handleVolunteerAuth(event, 'login')">
+  <div class="form-group">
+    <label>Email Address</label>
+    <input 
+      type="email" 
+      id="login-email" 
+      required 
+      placeholder="name@domain.com" 
+    />
+  </div>
+  <div class="form-group">
+    <label>Password</label>
+    <input 
+      type="password" 
+      id="login-password" 
+      required 
+      placeholder="••••••••" 
+    />
+  </div>
+  <button type="submit" class="primary-btn w-full">Log In</button>
+</form>
 
       <!-- Volunteer Sign Up Form -->
       <!-- Volunteer Sign Up Form -->
