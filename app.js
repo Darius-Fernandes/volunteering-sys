@@ -1605,3 +1605,91 @@ const deadlineInput = document.getElementById("opp-deadline");
 if (deadlineInput) {
   deadlineInput.min = new Date().toISOString().split("T")[0];
 }
+// ==========================================
+// AWS AI CHATBOT LOGIC
+// ==========================================
+// Replace this with your actual API Gateway Invoke URL from Step 5 above
+const AWS_API_GATEWAY_URL = "https://YOUR_API_GATEWAY_ID.execute-api.ap-south-1.amazonaws.com/prod/chat";
+
+function toggleAwsChat() {
+  const windowEl = document.getElementById("aws-chat-window");
+  if (!windowEl) return;
+  windowEl.classList.toggle("active");
+  if (windowEl.classList.contains("active")) {
+    const inputEl = document.getElementById("aws-chat-input");
+    if (inputEl) inputEl.focus();
+  }
+}
+
+function handleAwsKeypress(e) {
+  if (e.key === "Enter") {
+    sendAwsMessage();
+  }
+}
+
+async function sendAwsMessage() {
+  const inputEl = document.getElementById("aws-chat-input");
+  const messagesEl = document.getElementById("aws-chat-messages");
+  if (!inputEl || !messagesEl) return;
+
+  const text = inputEl.value.trim();
+  if (!text) return;
+
+  // 1. Render User Message
+  messagesEl.innerHTML += `
+    <div class="aws-msg-row user">
+      <div class="aws-msg-bubble user">${escapeAwsHtml(text)}</div>
+    </div>
+  `;
+  inputEl.value = "";
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  // 2. Render Loading State
+  const loadingId = "aws-loading-" + Date.now();
+  messagesEl.innerHTML += `
+    <div id="${loadingId}" class="aws-msg-row bot">
+      <div class="aws-msg-bubble loading">Thinking via AWS Lambda...</div>
+    </div>
+  `;
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  try {
+    const response = await fetch(AWS_API_GATEWAY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: text })
+    });
+
+    const loader = document.getElementById(loadingId);
+    if (loader) loader.remove();
+
+    if (response.ok) {
+      const data = await response.json();
+      messagesEl.innerHTML += `
+        <div class="aws-msg-row bot">
+          <div class="aws-msg-bubble bot">${escapeAwsHtml(data.reply || "No reply returned.")}</div>
+        </div>
+      `;
+    } else {
+      throw new Error("Bad status from AWS Lambda");
+    }
+  } catch (err) {
+    const loader = document.getElementById(loadingId);
+    if (loader) loader.remove();
+
+    // Fallback simulation response if AWS Lambda URL is not yet connected
+    messagesEl.innerHTML += `
+      <div class="aws-msg-row bot">
+        <div class="aws-msg-bubble bot">[Demo Output]: All volunteer shifts for "${escapeAwsHtml(text)}" are active and open for registration!</div>
+      </div>
+    `;
+  }
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function escapeAwsHtml(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}

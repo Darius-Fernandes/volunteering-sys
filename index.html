@@ -598,6 +598,46 @@
 
   <!-- Toast Notification Container -->
   <div id="toast" class="toast hidden">Application submitted successfully!</div>
+  <!-- AWS AI Volunteer Assistant Widget -->
+<div id="aws-chat-widget-root">
+  <!-- Floating Launcher Button -->
+  <button type="button" onclick="toggleAwsChat()" id="aws-chat-btn" aria-label="Open AI Volunteer Assistant">
+    <i class="fa-solid fa-robot"></i>
+  </button>
+
+  <!-- Chat Drawer / Window -->
+  <div id="aws-chat-window">
+    <div class="aws-chat-header">
+      <div class="aws-header-title">
+        <span class="aws-status-dot"></span>
+        <h3>KindredMatch AWS Assistant</h3>
+      </div>
+      <button type="button" onclick="toggleAwsChat()" class="aws-btn-close" aria-label="Close Chat">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div id="aws-chat-messages">
+      <div class="aws-msg-row bot">
+        <div class="aws-msg-bubble bot">
+          Hello! I'm your AWS-powered assistant. Ask me anything about volunteering slots, centers, or requirements!
+        </div>
+      </div>
+    </div>
+
+    <div class="aws-input-row">
+      <input 
+        type="text" 
+        id="aws-chat-input" 
+        placeholder="Ask a question..." 
+        onkeypress="handleAwsKeypress(event)"
+      />
+      <button type="button" onclick="sendAwsMessage()" class="aws-send-btn" aria-label="Send">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+</div>
 
   <script src="app.js"></script>
 </body>

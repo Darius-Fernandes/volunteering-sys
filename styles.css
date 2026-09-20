@@ -1472,3 +1472,191 @@ body {
   border-radius: 6px;
   object-fit: cover;
 }
+/* ==========================================
+   AWS CHATBOT WIDGET STYLES
+   ========================================== */
+#aws-chat-widget-root {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+}
+
+#aws-chat-btn {
+  background-color: var(--primary, #059669);
+  color: #ffffff;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+#aws-chat-btn:hover {
+  transform: scale(1.06);
+  filter: brightness(0.92);
+}
+
+#aws-chat-window {
+  display: none;
+  flex-direction: column;
+  background-color: var(--bg-surface, #ffffff);
+  width: 22rem;
+  max-width: calc(100vw - 2rem);
+  height: 450px;
+  max-height: 80vh;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-color, #e5e7eb);
+  position: absolute;
+  bottom: 4.25rem;
+  right: 0;
+  overflow: hidden;
+}
+
+#aws-chat-window.active {
+  display: flex;
+}
+
+.aws-chat-header {
+  background-color: var(--primary, #047857);
+  color: #ffffff;
+  padding: 0.85rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.aws-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.aws-status-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background-color: #34d399;
+  box-shadow: 0 0 6px #34d399;
+}
+
+.aws-header-title h3 {
+  font-weight: 700;
+  font-size: 0.875rem;
+  margin: 0;
+  color: #ffffff;
+}
+
+.aws-btn-close {
+  background: none;
+  border: none;
+  color: #a7f3d0;
+  cursor: pointer;
+  font-size: 1.15rem;
+  line-height: 1;
+  padding: 0.25rem;
+}
+
+.aws-btn-close:hover {
+  color: #ffffff;
+}
+
+#aws-chat-messages {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: var(--bg-subtle, #f9fafb);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.aws-msg-row {
+  display: flex;
+  width: 100%;
+}
+
+.aws-msg-row.user {
+  justify-content: flex-end;
+}
+
+.aws-msg-row.bot {
+  justify-content: flex-start;
+}
+
+.aws-msg-bubble {
+  padding: 0.7rem 0.85rem;
+  border-radius: 14px;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  max-width: 82%;
+  word-break: break-word;
+}
+
+.aws-msg-bubble.bot {
+  background-color: #d1fae5;
+  color: #065f46;
+  border-top-left-radius: 2px;
+}
+
+.aws-msg-bubble.user {
+  background-color: var(--primary, #059669);
+  color: #ffffff;
+  border-top-right-radius: 2px;
+}
+
+.aws-msg-bubble.loading {
+  background-color: #e5e7eb;
+  color: #4b5563;
+  font-size: 0.75rem;
+  border-top-left-radius: 2px;
+  animation: pulse 1.5s infinite;
+}
+
+.aws-input-row {
+  padding: 0.75rem;
+  background-color: var(--bg-surface, #ffffff);
+  border-top: 1px solid var(--border-color, #f3f4f6);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+#aws-chat-input {
+  flex: 1;
+  border: 1px solid var(--border-color, #d1d5db);
+  background-color: var(--bg-surface, #ffffff);
+  color: var(--text-primary, #111827);
+  border-radius: 10px;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+#aws-chat-input:focus {
+  border-color: var(--primary, #059669);
+}
+
+.aws-send-btn {
+  background-color: var(--primary, #059669);
+  color: #ffffff;
+  padding: 0.55rem 0.85rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+}
+
+.aws-send-btn:hover {
+  filter: brightness(0.92);
+}
